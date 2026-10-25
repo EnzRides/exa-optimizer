@@ -32,7 +32,7 @@ $ErrorActionPreference = 'Continue'
 # relaunch an elevated PowerShell that re-downloads and runs the
 # script if we are not already admin.
 # -----------------------------------------------------------------
-$SCRIPT_URL = "PASTE_YOUR_RAW_GITHUB_URL_HERE"
+$SCRIPT_URL = ""
 
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
