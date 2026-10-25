@@ -1,4 +1,29 @@
+<#
+    Win11-Debloat-Optimizer.ps1  |  EXA OPTIMIZER (web launcher edition)
+    -----------------------------------------------------------------
+    A safe, reversible Windows 11 debloat + optimization script.
+    This version is built to run via: irm <raw-github-url> | iex
 
+    What it does:
+      1. Creates a System Restore point before changing anything
+      2. Removes common pre-installed/bundled ("bloat") apps
+      3. Removes OneDrive
+      4. Removes Widgets, Chat icon, and Copilot button from the taskbar
+      5. Disables background telemetry/diagnostic tasks (not security)
+      6. Trims unnecessary startup entries and visual effects
+      7. Disables a short list of non-essential services (reversible)
+      8. Runs disk cleanup and DISM component cleanup
+
+    What it deliberately does NOT do:
+      - Disable Windows Update, Defender, or Firewall
+      - Remove the Microsoft Store itself
+      - Touch BitLocker, user accounts, or network security settings
+      - Make unverifiable "gaming FPS boost" registry hacks
+
+    Everything here is reversible: apps can be reinstalled from the
+    Microsoft Store, services can be re-enabled via services.msc,
+    and the restore point lets you roll back entirely.
+-----------------------------------------------------------------#>
 
 $ErrorActionPreference = 'Continue'
 
@@ -11,9 +36,24 @@ $SCRIPT_URL = "https://raw.githubusercontent.com/EnzRides/exa-optimizer/refs/hea
 
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
-    Write-Host "Requesting Administrator access..." -ForegroundColor Yellow
-    $elevateCmd = "irm $SCRIPT_URL | iex"
-    Start-Process powershell -ArgumentList "-NoProfile -ExecutionPolicy Bypass -Command `"$elevateCmd`"" -Verb RunAs
+    Write-Host ""
+    Write-Host "  EXA Optimizer needs Administrator access." -ForegroundColor Yellow
+    Write-Host "  A UAC prompt should appear - click YES to allow it." -ForegroundColor Yellow
+    Write-Host ""
+    try {
+        $elevateArgs = @("-NoProfile", "-ExecutionPolicy", "Bypass", "-Command", "irm $SCRIPT_URL | iex")
+        Start-Process -FilePath "powershell.exe" -ArgumentList $elevateArgs -Verb RunAs -ErrorAction Stop
+    } catch {
+        Write-Host ""
+        Write-Host "  Could not get Administrator access." -ForegroundColor Red
+        Write-Host "  This happens if you clicked 'No' on the UAC prompt, or if your" -ForegroundColor Red
+        Write-Host "  Windows account is a Standard user (not an Administrator)." -ForegroundColor Red
+        Write-Host ""
+        Write-Host "  Fix: open PowerShell as Administrator yourself first" -ForegroundColor Yellow
+        Write-Host "  (right-click Start -> Windows PowerShell (Admin)), then run:" -ForegroundColor Yellow
+        Write-Host "    irm $SCRIPT_URL | iex" -ForegroundColor Green
+        Write-Host ""
+    }
     return
 }
 
