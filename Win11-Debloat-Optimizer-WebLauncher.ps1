@@ -1,29 +1,4 @@
-<#
-    Win11-Debloat-Optimizer.ps1  |  EXA OPTIMIZER (web launcher edition)
-    -----------------------------------------------------------------
-    A safe, reversible Windows 11 debloat + optimization script.
-    This version is built to run via: irm <raw-github-url> | iex
 
-    What it does:
-      1. Creates a System Restore point before changing anything
-      2. Removes common pre-installed/bundled ("bloat") apps
-      3. Removes OneDrive
-      4. Removes Widgets, Chat icon, and Copilot button from the taskbar
-      5. Disables background telemetry/diagnostic tasks (not security)
-      6. Trims unnecessary startup entries and visual effects
-      7. Disables a short list of non-essential services (reversible)
-      8. Runs disk cleanup and DISM component cleanup
-
-    What it deliberately does NOT do:
-      - Disable Windows Update, Defender, or Firewall
-      - Remove the Microsoft Store itself
-      - Touch BitLocker, user accounts, or network security settings
-      - Make unverifiable "gaming FPS boost" registry hacks
-
-    Everything here is reversible: apps can be reinstalled from the
-    Microsoft Store, services can be re-enabled via services.msc,
-    and the restore point lets you roll back entirely.
------------------------------------------------------------------#>
 
 $ErrorActionPreference = 'Continue'
 
@@ -32,7 +7,7 @@ $ErrorActionPreference = 'Continue'
 # relaunch an elevated PowerShell that re-downloads and runs the
 # script if we are not already admin.
 # -----------------------------------------------------------------
-$SCRIPT_URL = ""
+$SCRIPT_URL = "https://raw.githubusercontent.com/EnzRides/exa-optimizer/refs/heads/main/Win11-Debloat-Optimizer-WebLauncher.ps1"
 
 $currentPrincipal = New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())
 if (-not $currentPrincipal.IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)) {
